@@ -1,0 +1,40 @@
+clear
+clc
+
+n = 5000 ;
+
+AA = diag(4*ones(n,1),0) + ...
+    diag(-1*ones(n-1,1),1) + diag(-1*ones(n-1,1),-1) ;
+A = AA + (10e-6)*ones(n);
+
+b = ones(n,1) ;
+
+x0 = zeros(n,1) ;
+epsilon1 = 10e-4 ;
+epsilon2 = 10e-6 ;
+k = 0 ;
+X = [];
+n = length(b);
+x1 = zeros(n,1) ;
+y = zeros(n,1) ;
+%--------------------------------------------------------
+D = diag(diag(A)) ;
+U = triu(A) - D ;
+L = tril(A) - D ;
+%--------------------------------------------------------
+   x1 = -inv(D)*(L + U)*x0 + inv(D)*b ;
+   k = k + 1 ;
+   X = [X  x0  x1];
+%--------------------------------------------------------
+while(norm(x1 - x0,inf)) > epsilon1
+    y = -inv(D)*(L + U)*x1 + inv(D)*b ;
+    x0 = x1 ;
+    x1 = y ;
+    k = k + 1 ;
+    X = [X  y];
+
+end
+ 
+ X 
+ x1
+ k
